@@ -1,6 +1,12 @@
-ATELIER / IMPOSITION
-Ouvrir index.html dans Chrome ou Firefox. Aucune installation ni Python.
-Les bibliothèques PDF-lib et PDF.js sont chargées depuis jsDelivr : connexion Internet nécessaire au chargement, aucun PDF transmis.
-Pour héberger : publier les trois fichiers index.html, style.css, app.js sur un hébergement statique.
-Cahiers : saisir un multiple de 4, ou une liste de multiples de 4. Les cahiers sont des feuilles imbriquées, à pli central, pas des plans de pliage industriel à plis croisés.
-Imprimer à 100 %, tester une feuille pour vérifier la retiration. Pas de contrôle PDF/X, de gestion ICC ni de garantie sur les tons directs, rotations de pages source ou PDF complexes. Vérifier les repères et fonds perdus avant tirage.
+ATELIER — IMPOSITION V2
+Ouvrir index.html dans Chrome. Internet nécessaire pour PDF.js et PDF-lib (CDN). Les PDF sont traités localement.
+
+MODIFIER LE SITE
+index.html : structure, champs, formats papier (valeurs en mm).
+style.css : couleurs, mise en page et aperçu continu.
+js/plan.js : ordre des pages et cahiers.
+js/export.js : géométrie, échelle, repères et génération PDF.
+js/paper.js : synchronisation des dimensions.
+js/preview.js : affichage continu, rendu différé des faces.
+js/app.js : import, état partagé, événements et téléchargement.
+Les scripts classiques sont chargés dans l'ordre indiqué dans index.html, sans serveur ni compilation.

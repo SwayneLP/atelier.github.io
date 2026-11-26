@@ -1,1 +1,290 @@
-<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Atelier — Imposition</title><link rel="stylesheet" href="style.css"><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><header><b>ATELIER<span> / IMPOSITION</span></b><small>PRÉPRESSE · PDF LOCAL</small><button id="export" disabled>Exporter le PDF ↗</button></header><main><aside><section><h2>01 — Document</h2><label class="drop" id="drop">Déposer ou choisir un PDF<input id="file" type="file" accept="application/pdf"></label><p id="info">Aucun document</p></section><section><h2>02 — Imposition</h2><label>Mode<select id="mode"><option value="book">Livret / piqûre à cheval</option><option value="sig" selected>Cahiers / reliure cousue</option><option value="n">N-up / poses multiples</option><option value="repeat">Step & repeat</option><option value="cut">Coupe et empilage</option><option value="turn">Retiration — work and turn</option><option value="tumble">Bascule — work and tumble</option></select></label><div id="signature"><label>Pages par cahier<input id="sig" type="number" min="4" step="4" value="12"></label><label>Dernier cahier<select id="last"><option value="short">Réduire au multiple de 4</option><option value="full">Compléter au format choisi</option></select></label><label>Répartition libre (facultatif)<input id="custom" placeholder="12, 16, 12, 8"></label></div><div id="grid"><div class="pair"><label>Colonnes<input id="cols" type="number" value="2" min="1" max="20"></label><label>Lignes<input id="rows" type="number" value="2" min="1" max="20"></label></div><label>Ordre<select id="order"><option value="row">Horizontal</option><option value="col">Vertical</option><option value="rtl">Droite à gauche</option></select></label><label>Recto-verso<input type="checkbox" id="duplex" checked></label></div><label>Reliure<select id="binding"><option value="left">Gauche</option><option value="right">Droite</option></select></label><label>Chasse maximale (mm)<input id="creep" type="number" value="0" min="0" step="0.1"></label><label>Rotation du verso 180°<input id="flip" type="checkbox"></label></section><section><h2>03 — Feuille</h2><label>Format<select id="paper"><option value="auto">Automatique</option><option value="210,297">A4</option><option value="297,420">A3</option><option value="320,450">SRA3</option><option value="225,320">SRA4</option><option value="353,500">B3</option><option value="216,279">Letter</option><option value="216,356">Legal</option><option value="279,432">Tabloid</option><option value="305,457">12 × 18 in</option><option value="330,483">13 × 19 in</option><option value="custom">Personnalisé</option></select></label><div class="pair"><label>Largeur (mm)<input id="w" type="number" value="420" min="1"></label><label>Hauteur (mm)<input id="h" type="number" value="297" min="1"></label></div><label>Orientation<select id="orient"><option value="land">Paysage</option><option value="port">Portrait</option></select></label><label>Échelle<select id="scale"><option value="real">100 % — taille originale</option><option value="fit">Ajuster à la feuille</option></select></label><div class="pair"><label>Marge (mm)<input id="margin" type="number" min="0" value="10"></label><label>Espacement (mm)<input id="gap" type="number" min="0" value="0"></label></div><label>Fond perdu manuel (mm)<input id="bleed" type="number" min="0" value="0" step="0.5"></label></section><section><h2>04 — Repères</h2><label>Traits de coupe<input id="crop" type="checkbox" checked></label><label>Repères de pli<input id="fold" type="checkbox"></label><label>Repères de repérage<input id="reg" type="checkbox"></label><label>Repères de collation<input id="collate" type="checkbox"></label><label>Cartouche<input id="slug" type="checkbox"></label></section></aside><article><div class="toolbar"><div><b id="summary">Aperçu d'imposition</b><p id="status">Importez un PDF pour commencer.</p></div><div><button id="prev">←</button> <span id="counter">—</span> <button id="next">→</button></div></div><div id="preview"><div class="empty">Aucune feuille à afficher</div></div><div id="details"></div></article></main><script src="app.js"></script></html>
+<!DOCTYPE html>
+<html lang="fr">
+ <meta charset="utf-8"/>
+ <meta content="width=device-width,initial-scale=1" name="viewport"/>
+ <title>
+  Atelier — Imposition
+ </title>
+ <link href="style.css" rel="stylesheet"/>
+ <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js">
+ </script>
+ <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js">
+ </script>
+ <header>
+  <b>
+   ATELIER
+   <span>
+    / IMPOSITION
+   </span>
+  </b>
+  <small>
+   PRÉPRESSE · PDF LOCAL
+  </small>
+  <button disabled="" id="export">
+   Exporter le PDF ↗
+  </button>
+ </header>
+ <main>
+  <aside>
+   <section>
+    <h2>
+     01 — Document
+    </h2>
+    <label class="drop" id="drop">
+     Déposer ou choisir un PDF
+     <input accept="application/pdf" id="file" type="file"/>
+    </label>
+    <p id="info">
+     Aucun document
+    </p>
+   </section>
+   <section>
+    <h2>
+     02 — Imposition
+    </h2>
+    <label>
+     Mode
+     <select id="mode">
+      <option value="book">
+       Livret / piqûre à cheval
+      </option>
+      <option selected="" value="sig">
+       Cahiers / reliure cousue
+      </option>
+      <option value="n">
+       N-up / poses multiples
+      </option>
+      <option value="repeat">
+       Step &amp; repeat
+      </option>
+      <option value="cut">
+       Coupe et empilage
+      </option>
+      <option value="turn">
+       Retiration — work and turn
+      </option>
+      <option value="tumble">
+       Bascule — work and tumble
+      </option>
+     </select>
+    </label>
+    <div id="signature">
+     <label>
+      Pages par cahier
+      <input id="sig" min="4" step="4" type="number" value="12"/>
+     </label>
+     <label>
+      Dernier cahier
+      <select id="last">
+       <option value="short">
+        Réduire au multiple de 4
+       </option>
+       <option value="full">
+        Compléter au format choisi
+       </option>
+      </select>
+     </label>
+     <label>
+      Répartition libre (facultatif)
+      <input id="custom" placeholder="12, 16, 12, 8"/>
+     </label>
+    </div>
+    <div id="grid">
+     <div class="pair">
+      <label>
+       Colonnes
+       <input id="cols" max="20" min="1" type="number" value="2"/>
+      </label>
+      <label>
+       Lignes
+       <input id="rows" max="20" min="1" type="number" value="2"/>
+      </label>
+     </div>
+     <label>
+      Ordre
+      <select id="order">
+       <option value="row">
+        Horizontal
+       </option>
+       <option value="col">
+        Vertical
+       </option>
+       <option value="rtl">
+        Droite à gauche
+       </option>
+      </select>
+     </label>
+     <label>
+      Recto-verso
+      <input checked="" id="duplex" type="checkbox"/>
+     </label>
+    </div>
+    <label>
+     Reliure
+     <select id="binding">
+      <option value="left">
+       Gauche
+      </option>
+      <option value="right">
+       Droite
+      </option>
+     </select>
+    </label>
+    <label>
+     Chasse maximale (mm)
+     <input id="creep" min="0" step="0.1" type="number" value="0"/>
+    </label>
+    <label>
+     Rotation du verso 180°
+     <input id="flip" type="checkbox"/>
+    </label>
+   </section>
+   <section>
+    <h2>
+     03 — Feuille
+    </h2>
+    <label>
+     Format
+     <select id="paper">
+      <option value="auto">
+       Automatique
+      </option>
+      <option value="210,297">
+       A4
+      </option>
+      <option value="297,420">
+       A3
+      </option>
+      <option value="320,450">
+       SRA3
+      </option>
+      <option value="225,320">
+       SRA4
+      </option>
+      <option value="353,500">
+       B3
+      </option>
+      <option value="216,279">
+       Letter
+      </option>
+      <option value="216,356">
+       Legal
+      </option>
+      <option value="279,432">
+       Tabloid
+      </option>
+      <option value="305,457">
+       12 × 18 in
+      </option>
+      <option value="330,483">
+       13 × 19 in
+      </option>
+      <option value="custom">
+       Personnalisé
+      </option>
+     </select>
+    </label>
+    <div class="pair">
+     <label>
+      Largeur (mm)
+      <input id="w" min="1" placeholder="Automatique" type="number" value="420"/>
+     </label>
+     <label>
+      Hauteur (mm)
+      <input id="h" min="1" placeholder="Automatique" type="number" value="297"/>
+     </label>
+    </div>
+    <label>
+     Orientation
+     <select id="orient">
+      <option value="land">
+       Paysage
+      </option>
+      <option value="port">
+       Portrait
+      </option>
+     </select>
+    </label>
+    <label>
+     Échelle
+     <select id="scale">
+      <option value="real">
+       100 % — taille originale
+      </option>
+      <option value="fit">
+       Ajuster à la feuille
+      </option>
+     </select>
+    </label>
+    <div class="pair">
+     <label>
+      Marge (mm)
+      <input id="margin" min="0" type="number" value="10"/>
+     </label>
+     <label>
+      Espacement (mm)
+      <input id="gap" min="0" type="number" value="0"/>
+     </label>
+    </div>
+    <label>
+     Fond perdu manuel (mm)
+     <input id="bleed" min="0" step="0.5" type="number" value="0"/>
+    </label>
+   </section>
+   <section>
+    <h2>
+     04 — Repères
+    </h2>
+    <label>
+     Traits de coupe
+     <input checked="" id="crop" type="checkbox"/>
+    </label>
+    <label>
+     Repères de pli
+     <input id="fold" type="checkbox"/>
+    </label>
+    <label>
+     Repères de repérage
+     <input id="reg" type="checkbox"/>
+    </label>
+    <label>
+     Repères de collation
+     <input id="collate" type="checkbox"/>
+    </label>
+    <label>
+     Cartouche
+     <input id="slug" type="checkbox"/>
+    </label>
+   </section>
+  </aside>
+  <article>
+   <div class="toolbar">
+    <div>
+     <b id="summary">
+      Aperçu d'imposition
+     </b>
+     <p id="status">
+      Importez un PDF pour commencer.
+     </p>
+    </div>
+   </div>
+   <div id="preview">
+    <div class="empty">
+     Aucune feuille à afficher
+    </div>
+   </div>
+   <div id="details">
+   </div>
+  </article>
+ </main>
+ <script src="js/plan.js">
+ </script>
+ <script src="js/export.js">
+ </script>
+ <script src="js/paper.js">
+ </script>
+ <script src="js/preview.js">
+ </script>
+ <script src="js/app.js">
+ </script>
+</html>
